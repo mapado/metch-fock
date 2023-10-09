@@ -1,5 +1,5 @@
 import blockAllCalls from './blockAllCalls';
 import fetchMock from './fetchMock';
-import getInputUrl from './utils';
+import { getInputUrl, getOptionMethod } from './utils';
 
-export { blockAllCalls, fetchMock, getInputUrl };
+export { blockAllCalls, fetchMock, getInputUrl, getOptionMethod };
