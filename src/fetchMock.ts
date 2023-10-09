@@ -52,13 +52,10 @@ function overrideFetch() {
  */
 function generateFetchMockHelper(method: string): FetchMockHelper {
   return (url: string | RegExp, response: Response) => {
-    console.log(typeof url);
     return fetchMock((input, options) => {
       if (getOptionMethod(options) !== method) {
         return false;
       }
-
-      console.log(typeof url, url);
 
       if (typeof url === 'string') {
         return getInputUrl(input) === url;
