@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { getInputUrl } from './utils';
+import { getInputUrl, getOptionMethod } from './utils';
 
 describe('getInputUrl', () => {
   test('with a string', () => {
@@ -22,5 +22,17 @@ describe('getInputUrl', () => {
     expect(
       getInputUrl(new Request('https://www.mapado.com', { method: 'POST' })),
     ).toBe('https://www.mapado.com/');
+  });
+});
+
+describe('getOptionMethod', () => {
+  test('with a method', () => {
+    expect(getOptionMethod({ method: 'POST' })).toBe('POST');
+    expect(getOptionMethod({ method: 'GET' })).toBe('GET');
+  });
+
+  test('with a method not in uppercase', () => {
+    expect(getOptionMethod({ method: 'post' })).toBe('POST');
+    expect(getOptionMethod({ method: 'DeLeTe' })).toBe('DELETE');
   });
 });

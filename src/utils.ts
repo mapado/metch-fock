@@ -11,3 +11,7 @@ export function getInputUrl(
 
   return input.url;
 }
+
+export function getOptionMethod(options: RequestInit | undefined): string {
+  return options?.method?.toUpperCase() || 'GET';
+}

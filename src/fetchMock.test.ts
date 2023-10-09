@@ -100,3 +100,63 @@ describe('fetchMock', () => {
     );
   });
 });
+
+describe('fetchMock.method', () => {
+  beforeEach(() => {
+    blockAllCalls();
+  });
+
+  afterEach(() => {
+    resetMocks();
+  });
+
+  test('fetchMock.get()', async () => {
+    const response = new Response('Hello world !');
+
+    fetchMock.get('https://www.mapado.com', response);
+
+    const result = await fetch('https://www.mapado.com');
+
+    expect(result).toBe(response);
+  });
+
+  test('fetchMock.post()', async () => {
+    const response = new Response('Hello world !');
+
+    fetchMock.post('https://www.mapado.com', response);
+
+    const result = await fetch('https://www.mapado.com', { method: 'POST' });
+
+    expect(result).toBe(response);
+  });
+
+  test('fetchMock.put() with regex', () => {
+    const response = new Response('Hello world !');
+
+    fetchMock.put(/https:\/\/www\.mapado\.com\/v1\//, response);
+
+    expect(
+      fetch('https://www.mapado.com/v1/test', { method: 'PUT' }),
+    ).resolves.toBe(response);
+  });
+
+  test.each([
+    8,
+    { foo: 'bar' },
+    Symbol('symbol'),
+    new Blob([]),
+    function () {},
+    () => {},
+  ])('helper with a weird value', async (matcher) => {
+    // @ts-expect-error Testing weird values at runtime
+    fetchMock.put(matcher, new Response('Ok'));
+
+    await expect(
+      fetch('https://www.mapado.com/v1/test', { method: 'PUT' }),
+    ).rejects.toEqual(
+      new Error(
+        'input must be a string or a RegExp when using fetchMock helper',
+      ),
+    );
+  });
+});

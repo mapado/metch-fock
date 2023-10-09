@@ -1,4 +1,5 @@
-import { getInputUrl } from './utils';
+import { type } from 'os';
+import { getInputUrl, getOptionMethod } from './utils';
 
 type MatcherFunction = (
   input: URL | RequestInfo,
@@ -21,10 +22,7 @@ export function resetMocks(): void {
   matchers = [];
 }
 
-export default function fetchMock(
-  matcher: MatcherFunction,
-  response: Response,
-): void {
+function fetchMock(matcher: MatcherFunction, response: Response): void {
   matchers.push(new Matcher(matcher, response));
 
   overrideFetch();
@@ -48,3 +46,55 @@ function overrideFetch() {
     );
   };
 }
+
+/**
+ * Simple matcher for quick mocking
+ */
+function generateFetchMockHelper(method: string): FetchMockHelper {
+  return (url: string | RegExp, response: Response) => {
+    console.log(typeof url);
+    return fetchMock((input, options) => {
+      if (getOptionMethod(options) !== method) {
+        return false;
+      }
+
+      console.log(typeof url, url);
+
+      if (typeof url === 'string') {
+        return getInputUrl(input) === url;
+      }
+
+      if (url instanceof RegExp) {
+        return url.test(getInputUrl(input));
+      }
+
+      throw new Error(
+        'input must be a string or a RegExp when using fetchMock helper',
+      );
+    }, response);
+  };
+}
+
+type FetchMockHelper = (url: string | RegExp, response: Response) => void;
+
+const get: FetchMockHelper = (url, response): void =>
+  generateFetchMockHelper('GET')(url, response);
+
+const post: FetchMockHelper = (url, response): void =>
+  generateFetchMockHelper('POST')(url, response);
+
+const put: FetchMockHelper = (url, response): void =>
+  generateFetchMockHelper('PUT')(url, response);
+
+const patch: FetchMockHelper = (url, response): void =>
+  generateFetchMockHelper('PATCH')(url, response);
+
+const deleteFn: FetchMockHelper = (url, response): void =>
+  generateFetchMockHelper('DELETE')(url, response);
+fetchMock.get = get;
+fetchMock.post = post;
+fetchMock.put = put;
+fetchMock.patch = patch;
+fetchMock.delete = deleteFn;
+
+export default fetchMock;
