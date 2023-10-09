@@ -8,6 +8,10 @@
     ".": "./dist/index.js"
   },
   "types": "./dist/types/index.d.ts",
+  "files": [
+    "dist",
+    "CHANGELOG.md"
+  ],
   "keywords": [
     "node",
     "fetch",
