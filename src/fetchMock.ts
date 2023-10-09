@@ -5,20 +5,41 @@ type MatcherFunction = (
   options: RequestInit | undefined,
 ) => boolean;
 
+class Matcher {
+  matcher: MatcherFunction;
+  response: Response;
+
+  constructor(matcher: MatcherFunction, response: Response) {
+    this.matcher = matcher;
+    this.response = response;
+  }
+}
+
+let matchers: Array<Matcher> = [];
+
+export function resetMocks(): void {
+  matchers = [];
+}
+
 export default function fetchMock(
   matcher: MatcherFunction,
   response: Response,
 ): void {
+  matchers.push(new Matcher(matcher, response));
+
+  overrideFetch();
+}
+
+function overrideFetch() {
   globalThis.fetch = async (
     input: URL | RequestInfo,
     options: RequestInit | undefined,
   ) => {
-    if (matcher(input, options)) {
-      console.log('match !');
-      return response;
+    for (const matcher of matchers) {
+      if (matcher.matcher(input, options)) {
+        return matcher.response;
+      }
     }
-
-    console.log('will throw');
 
     throw new Error(
       `Unable to match the given "${

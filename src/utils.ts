@@ -1,4 +1,6 @@
-export function getInputUrl(input: URL | RequestInfo): string {
+export function getInputUrl(
+  input: Parameters<typeof globalThis.fetch>[0],
+): string {
   if (typeof input === 'string') {
     return input;
   }

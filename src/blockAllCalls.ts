@@ -1,10 +1,10 @@
 import { getInputUrl } from './utils';
 
 export default function blockAllCalls(): void {
-  globalThis.fetch = async (
+  globalThis.fetch = async function blockedFetch(
     input: URL | RequestInfo,
     options: RequestInit | undefined,
-  ): Promise<Response> => {
+  ): Promise<Response> {
     const url = getInputUrl(input);
 
     throw new Error(
