@@ -1,9 +1,13 @@
 {
   "name": "metch-fock",
-  "version": "1.0.0",
+  "version": "1.0.0-rc.1",
   "type": "module",
   "license": "MIT",
   "description": "A `fetch` mock library",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "types": "./dist/types/index.d.ts",
   "keywords": [
     "node",
     "fetch",
@@ -20,7 +24,10 @@
   },
   "scripts": {
     "test": "vitest",
-    "lint:types": "tsc --noEmit"
+    "lint": "npm run lint:types",
+    "lint:types": "tsc --noEmit",
+    "build": "rm -rf dist; tsc",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@types/node": "^20.8.3",
