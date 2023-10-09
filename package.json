@@ -1,0 +1,32 @@
+{
+  "name": "metch-fock",
+  "version": "1.0.0",
+  "description": "A `fetch` mock library",
+  "keywords": [
+    "node",
+    "fetch",
+    "mock",
+    "test"
+  ],
+  "homepage": "https://github.com/mapado/metch-fock#readme",
+  "bugs": {
+    "url": "https://github.com/mapado/metch-fock/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mapado/metch-fock.git"
+  },
+  "license": "MIT",
+  "author": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.3",
+    "jsdom": "^22.1.0",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2",
+    "vitest": "^0.34.6"
+  }
+}
