@@ -1,5 +1,4 @@
-import { type } from 'os';
-import { getInputUrl, getOptionMethod } from './utils';
+import { getInputUrl, getOptionMethod } from './utils.js';
 
 type MatcherFunction = (
   input: URL | RequestInfo,

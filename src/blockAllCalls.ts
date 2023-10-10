@@ -1,4 +1,4 @@
-import { getInputUrl } from './utils';
+import { getInputUrl } from './utils.js';
 
 export default function blockAllCalls(): void {
   globalThis.fetch = async function blockedFetch(
