@@ -142,6 +142,8 @@ function getOptionMethod(options: RequestInit | undefined): string;
 
 ## Considered alternatives
 
+Why I did this library ? You can read [the full blog post here](https://julien.deniau.me/posts/2023-10-10-metck-fock).
+
 - We were using [`nock`](https://github.com/nock/nock) for a long time (and still are in some of our projects), but nock [is currently not compatible with Node 18+ native fetch implementation](https://github.com/nock/nock/issues/2397)
 - [`fetch-mock`](https://github.com/wheresrhys/fetch-mock), but no commit since Sep 2021, and does not work with [node 18+ fetch](https://github.com/wheresrhys/fetch-mock/issues/658) either
 - [@mswjs/interceptors](https://github.com/mswjs/interceptors) seems really overkill for a mocking system (but it does seems really powerful for middleware, proxy, etc.)
