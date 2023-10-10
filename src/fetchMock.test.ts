@@ -160,3 +160,39 @@ describe('fetchMock.method', () => {
     );
   });
 });
+
+describe('fetchMock.method.stringMethod', () => {
+  test('startsWith', async () => {
+    const response = new Response('Hello world !');
+
+    fetchMock.delete.startsWith('https://www.mapado.com', response);
+
+    const result = await fetch('https://www.mapado.com/foo.bar', {
+      method: 'DELETE',
+    });
+
+    expect(result).toBe(response);
+  });
+
+  test('endsWith', async () => {
+    const response = new Response('Hello world !');
+
+    fetchMock.patch.endsWith('foo.bar', response);
+
+    const result = await fetch('https://www.mapado.com/foo.bar', {
+      method: 'PATCH',
+    });
+
+    expect(result).toBe(response);
+  });
+
+  test('includes', async () => {
+    const response = new Response('Hello world !');
+
+    fetchMock.get.includes('mapado', response);
+
+    const result = await fetch('https://www.mapado.com/foo.bar');
+
+    expect(result).toBe(response);
+  });
+});

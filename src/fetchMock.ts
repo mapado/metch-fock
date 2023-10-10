@@ -21,13 +21,7 @@ export function resetMocks(): void {
   matchers = [];
 }
 
-function fetchMock(matcher: MatcherFunction, response: Response): void {
-  matchers.push(new Matcher(matcher, response));
-
-  overrideFetch();
-}
-
-function overrideFetch() {
+function overrideFetch(): void {
   globalThis.fetch = async (
     input: URL | RequestInfo,
     options: RequestInit | undefined,
@@ -46,11 +40,36 @@ function overrideFetch() {
   };
 }
 
+type FetchMockHelper = {
+  (url: string | RegExp, response: Response): void;
+  startsWith: FetchMockStringHelper;
+  endsWith: FetchMockStringHelper;
+  includes: FetchMockStringHelper;
+};
+type FetchMockStringHelper = (url: string, response: Response) => void;
+type ValidStringMethod = 'startsWith' | 'endsWith' | 'includes';
+
+type FetchMockFunction = {
+  (matcher: MatcherFunction, response: Response): void;
+  get: FetchMockHelper;
+  post: FetchMockHelper;
+  put: FetchMockHelper;
+  patch: FetchMockHelper;
+  delete: FetchMockHelper;
+};
+
+const fetchMock: FetchMockFunction = (matcher, response): void => {
+  matchers.push(new Matcher(matcher, response));
+
+  overrideFetch();
+};
+
 /**
- * Simple matcher for quick mocking
+ * Simple matcher for quick mocking.
+ * For example `fetchMock.post(url: string | RegExp, response: Response)` helper.
  */
 function generateFetchMockHelper(method: string): FetchMockHelper {
-  return (url: string | RegExp, response: Response) => {
+  const fn: FetchMockHelper = (url: string | RegExp, response: Response) => {
     return fetchMock((input, options) => {
       if (getOptionMethod(options) !== method) {
         return false;
@@ -69,28 +88,36 @@ function generateFetchMockHelper(method: string): FetchMockHelper {
       );
     }, response);
   };
+
+  fn.startsWith = generateFetchMockStringHelper(method, 'startsWith');
+  fn.endsWith = generateFetchMockStringHelper(method, 'endsWith');
+  fn.includes = generateFetchMockStringHelper(method, 'includes');
+
+  return fn;
 }
 
-type FetchMockHelper = (url: string | RegExp, response: Response) => void;
+/**
+ * This function generate string helper functions.
+ * For example `fetchMock.post.startsWith(startUrl: string, response: Response)` helper.
+ */
+function generateFetchMockStringHelper(
+  method: string,
+  methodName: ValidStringMethod,
+): FetchMockStringHelper {
+  return (url, response) => {
+    return fetchMock(
+      (input, options) =>
+        getOptionMethod(options) === method &&
+        getInputUrl(input)[methodName](url),
+      response,
+    );
+  };
+}
 
-const get: FetchMockHelper = (url, response): void =>
-  generateFetchMockHelper('GET')(url, response);
-
-const post: FetchMockHelper = (url, response): void =>
-  generateFetchMockHelper('POST')(url, response);
-
-const put: FetchMockHelper = (url, response): void =>
-  generateFetchMockHelper('PUT')(url, response);
-
-const patch: FetchMockHelper = (url, response): void =>
-  generateFetchMockHelper('PATCH')(url, response);
-
-const deleteFn: FetchMockHelper = (url, response): void =>
-  generateFetchMockHelper('DELETE')(url, response);
-fetchMock.get = get;
-fetchMock.post = post;
-fetchMock.put = put;
-fetchMock.patch = patch;
-fetchMock.delete = deleteFn;
+fetchMock.get = generateFetchMockHelper('GET');
+fetchMock.post = generateFetchMockHelper('POST');
+fetchMock.put = generateFetchMockHelper('PUT');
+fetchMock.patch = generateFetchMockHelper('PATCH');
+fetchMock.delete = generateFetchMockHelper('DELETE');
 
 export default fetchMock;

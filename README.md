@@ -68,6 +68,7 @@ describe('some test file', () => {
 
     fetchMock.get('https://match.get/test', expected);
     fetchMock.put(/https:\/\/match.put\//, expected);
+    fetchMock.post.startsWith('https://match.post/', expected);
 
     const r1 = await doFetchWithToken('https://match.get/test');
 
@@ -78,6 +79,12 @@ describe('some test file', () => {
     });
 
     expect(r2).toBe(expected);
+
+    const r3 = await doFetchWithToken('https://match.post/test', {
+      method: 'POST',
+    });
+
+    expect(r3).toBe(expected);
   });
 
   test('some test with a complex matcher', () => {
@@ -119,6 +126,11 @@ function fetchMock.post(url: string | RegExp, response: Response): void;
 function fetchMock.put(url: string | RegExp, response: Response): void;
 function fetchMock.patch(url: string | RegExp, response: Response): void;
 function fetchMock.delete(url: string | RegExp, response: Response): void;
+
+// foreach methods, there are string helper too
+function fetchMock.<httpVerb>.startsWith(url: string, response: Response): void;
+function fetchMock.<httpVerb>.endsWith(url: string, response: Response): void;
+function fetchMock.<httpVerb>.includes(url: string, response: Response): void;
 ```
 
 Utility functions:
