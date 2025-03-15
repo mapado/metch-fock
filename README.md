@@ -40,7 +40,7 @@ The first one will be used to block all network `fetch` call to avoid calling di
 The second one will reset the mock stack. If you don't do that, the second test will match the mock of the first test, you don't want that.
 
 ```ts
-import { blockAllCalls, fetchMock, resetMocks } from './fetchMock';
+import { blockAllCalls, fetchMock, resetMocks } from 'metch-fock';
 
 describe('some test file', () => {
   beforeEach(() => {
