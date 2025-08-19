@@ -5,7 +5,10 @@
   "license": "MIT",
   "description": "A `fetch` mock library",
   "exports": {
-    ".": "./dist/index.js"
+    ".": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/index.js"
+    }
   },
   "types": "./dist/types/index.d.ts",
   "files": [
