@@ -162,6 +162,14 @@ describe('fetchMock.method', () => {
 });
 
 describe('fetchMock.method.stringMethod', () => {
+  beforeEach(() => {
+    blockAllCalls();
+  });
+
+  afterEach(() => {
+    resetMocks();
+  });
+
   test('startsWith', async () => {
     const response = new Response('Hello world !');
 
@@ -194,5 +202,31 @@ describe('fetchMock.method.stringMethod', () => {
     const result = await fetch('https://www.mapado.com/foo.bar');
 
     expect(result).toBe(response);
+  });
+});
+
+describe('fetchMock order', () => {
+  beforeEach(() => {
+    blockAllCalls();
+  });
+
+  afterEach(() => {
+    resetMocks();
+  });
+
+  test('should use the last matcher first', async () => {
+    fetchMock.get.startsWith('https://www.mapado.com', new Response('Match 1'));
+
+    fetchMock.get.startsWith(
+      'https://www.mapado.com/foo',
+      new Response('Match 2'),
+    );
+
+    const r1 = await fetch('https://www.mapado.com/foo.bar');
+    expect(await r1.text()).toEqual('Match 2');
+
+    // does not match the second one, should match the first one
+    const r2 = await fetch('https://www.mapado.com/bar.bar');
+    expect(await r2.text()).toEqual('Match 1');
   });
 });
