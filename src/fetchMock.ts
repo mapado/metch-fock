@@ -59,7 +59,7 @@ type FetchMockFunction = {
 };
 
 const fetchMock: FetchMockFunction = (matcher, response): void => {
-  matchers.push(new Matcher(matcher, response));
+  matchers.unshift(new Matcher(matcher, response));
 
   overrideFetch();
 };
