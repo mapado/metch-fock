@@ -130,12 +130,12 @@ describe('fetchMock.method', () => {
     expect(result).toBe(response);
   });
 
-  test('fetchMock.put() with regex', () => {
+  test('fetchMock.put() with regex', async () => {
     const response = new Response('Hello world !');
 
     fetchMock.put(/https:\/\/www\.mapado\.com\/v1\//, response);
 
-    expect(
+    await expect(
       fetch('https://www.mapado.com/v1/test', { method: 'PUT' }),
     ).resolves.toBe(response);
   });
