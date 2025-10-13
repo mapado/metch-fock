@@ -33,8 +33,7 @@
     "test": "vitest",
     "lint": "npm run lint:types",
     "lint:types": "tsc --noEmit",
-    "build": "rm -rf dist; tsc",
-    "prepublishOnly": "npm run build"
+    "build": "rm -rf dist; tsc"
   },
   "devDependencies": {
     "@types/node": "^20.8.3",
