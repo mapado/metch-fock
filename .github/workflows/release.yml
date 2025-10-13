@@ -36,5 +36,5 @@ jobs:
           else
             echo "TAG=latest" >> "$GITHUB_OUTPUT"
           fi
-      - run: cd npm && npm publish --tag ${{ steps.npm_tag.outputs.TAG }}
+      - run: npm publish --tag ${{ steps.npm_tag.outputs.TAG }}
 
