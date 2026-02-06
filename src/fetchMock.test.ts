@@ -29,7 +29,7 @@ describe('fetchMock', () => {
 
     await expect(fetch('https://www.mapado.com')).rejects.toEqual(
       new Error(
-        'Unable to match the given "GET" fetch call to "https://www.mapado.com"',
+        'Metch-fock: Unable to match the given "GET" fetch call to "https://www.mapado.com"',
       ),
     );
   });
@@ -46,7 +46,9 @@ describe('fetchMock', () => {
     fetchMock((input, options) => false, response);
 
     await expect(fetch(url, { method })).rejects.toEqual(
-      new Error(`Unable to match the given "${method}" fetch call to "${url}"`),
+      new Error(
+        `Metch-fock: Unable to match the given "${method}" fetch call to "${url}"`,
+      ),
     );
   });
 
@@ -62,7 +64,7 @@ describe('fetchMock', () => {
 
     await expect(fetch('https://dont.match/test')).rejects.toEqual(
       new Error(
-        'Unable to match the given "GET" fetch call to "https://dont.match/test"',
+        'Metch-fock: Unable to match the given "GET" fetch call to "https://dont.match/test"',
       ),
     );
   });
@@ -95,7 +97,7 @@ describe('fetchMock', () => {
 
     await expect(fetch('https://1.match/test')).rejects.toEqual(
       new Error(
-        'Unable to match the given "GET" fetch call to "https://1.match/test"',
+        'Metch-fock: Unable to match the given "GET" fetch call to "https://1.match/test"',
       ),
     );
   });
@@ -155,7 +157,7 @@ describe('fetchMock.method', () => {
       fetch('https://www.mapado.com/v1/test', { method: 'PUT' }),
     ).rejects.toEqual(
       new Error(
-        'input must be a string or a RegExp when using fetchMock helper',
+        'Metch-fock: input must be a string or a RegExp when using fetchMock helper',
       ),
     );
   });
